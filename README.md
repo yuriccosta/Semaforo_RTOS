@@ -35,9 +35,9 @@ O sistema utiliza o **FreeRTOS** como sistema operacional em tempo real para ger
   - Atualiza uma flag global `mode`.
 
 - **`vDisplayTask`**  
-  Atualiza o **display OLED** a cada 5 segundos com mensagens como:  
+  Atualiza o **display OLED** a cada 2 segundos com mensagens como:  
   - "Modo Noturno Ativo"  
-  - Ou a cor atual do semáforo: "VERDE", "AMARELO", "VERMELHO".
+  - Ou a cor atual do semáforo: "Verde", "Amarelo", "Vermelho".
 
 ---
 
