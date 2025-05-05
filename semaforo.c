@@ -170,7 +170,7 @@ void vBuzzerTask(){
                 pwm_set_gpio_level(BUZZER_A, 100); // Define o nível do PWM para o buzzer
                 vTaskDelay(pdMS_TO_TICKS(200)); // Aguarda 200ms
                 pwm_set_gpio_level(BUZZER_A, 0); // Desliga o buzzer
-                vTaskDelay(pdMS_TO_TICKS(800)); // Aguarda 900ms
+                vTaskDelay(pdMS_TO_TICKS(800)); // Aguarda 800ms
             }
             else if (current_state == 1){
                 // Um beep rápido intermitente
@@ -222,7 +222,6 @@ void vDisplayTask()
     ssd1306_send_data(&ssd);
 
 
-    int contador = 0;
     bool cor = true;
 
     char semaforocolor[3][10] = {"Verde", "Amarelo", "Vermelho"}; // Array para armazenar os nomes das cores
@@ -253,27 +252,9 @@ void vDisplayTask()
     }
 }
 
-// Trecho para modo BOOTSEL com botão B
-#include "pico/bootrom.h"
-#define botaoB 6
-void gpio_irq_handler(uint gpio, uint32_t events)
-{
-    if (gpio == botaoB){
-        reset_usb_boot(0, 0);
-    }
-}
 
 int main()
 {
-    // Para ser utilizado o modo BOOTSEL com botão B
-    gpio_init(botaoB);
-    gpio_set_dir(botaoB, GPIO_IN);
-    gpio_pull_up(botaoB);
-    gpio_set_irq_enabled_with_callback(botaoB, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
-    // Fim do trecho para modo BOOTSEL com botão B
-
-
-
     stdio_init_all();
 
     xTaskCreate(vLedTask, "Led Semaforo Task", configMINIMAL_STACK_SIZE,
