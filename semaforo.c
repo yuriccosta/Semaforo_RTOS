@@ -161,9 +161,9 @@ void vBuzzerTask(){
         if (mode){
             // Modo noturno, beep lento a cada 2 segundos
             pwm_set_gpio_level(BUZZER_A, 100); // Liga o buzzer
-            vTaskDelay(pdMS_TO_TICKS(200)); // Aguarda 300ms
+            vTaskDelay(pdMS_TO_TICKS(1000)); // Aguarda 1s
             pwm_set_gpio_level(BUZZER_A, 0); // Desliga o buzzer
-            vTaskDelay(pdMS_TO_TICKS(1800)); // Aguarda 1.7s
+            vTaskDelay(pdMS_TO_TICKS(1000)); // Aguarda 1s
         } else{
             if (current_state == 0){
                 // Um beep curto por segundo
@@ -239,7 +239,6 @@ void vDisplayTask()
             ssd1306_draw_string(&ssd, "Modo Noturno", 16, 32); // Desenha uma string
             ssd1306_draw_string(&ssd, "Ativado", 32, 44); // Desenha uma string
             ssd1306_send_data(&ssd);                           // Atualiza o display
-            vTaskDelay(pdMS_TO_TICKS(2000));
         } else{
             ssd1306_fill(&ssd, !cor);                          // Limpa o display
             ssd1306_rect(&ssd, 3, 3, 122, 60, cor, !cor);      // Desenha um retângulo
@@ -248,10 +247,9 @@ void vDisplayTask()
             ssd1306_line(&ssd, 3, 27, 123, 27, cor);      // Desenha uma linha
             ssd1306_draw_string(&ssd, "Estado atual:", 8, 32); // Desenha uma string
             ssd1306_draw_string(&ssd, semaforocolor[current_state], 30, 44); // Desenha uma string
-
             ssd1306_send_data(&ssd);                           // Atualiza o display
-            vTaskDelay(pdMS_TO_TICKS(5000));
         }
+        vTaskDelay(pdMS_TO_TICKS(2000)); // Aguarda 2 segundos
     }
 }
 
