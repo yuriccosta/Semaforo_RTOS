@@ -29,7 +29,6 @@ uint sm;
 
 volatile uint8_t current_state = 0; // Estado atual do semáforo
 volatile bool mode = false; // Modo noturno do semáforo
-static volatile uint32_t last_time_button = 0; // Variável para armazenar o último tempo do botão
 
 // Matriz para armazenar os desenhos da matriz de LEDs
 uint padrao_led[4][LED_COUNT] = {
@@ -162,16 +161,16 @@ void vBuzzerTask(){
         if (mode){
             // Modo noturno, beep lento a cada 2 segundos
             pwm_set_gpio_level(BUZZER_A, 100); // Liga o buzzer
-            vTaskDelay(pdMS_TO_TICKS(100)); // Aguarda 100ms
+            vTaskDelay(pdMS_TO_TICKS(200)); // Aguarda 300ms
             pwm_set_gpio_level(BUZZER_A, 0); // Desliga o buzzer
-            vTaskDelay(pdMS_TO_TICKS(1900)); // Aguarda 1.9s
+            vTaskDelay(pdMS_TO_TICKS(1800)); // Aguarda 1.7s
         } else{
             if (current_state == 0){
                 // Um beep curto por segundo
                 pwm_set_gpio_level(BUZZER_A, 100); // Define o nível do PWM para o buzzer
-                vTaskDelay(pdMS_TO_TICKS(100)); // Aguarda 100ms
+                vTaskDelay(pdMS_TO_TICKS(200)); // Aguarda 200ms
                 pwm_set_gpio_level(BUZZER_A, 0); // Desliga o buzzer
-                vTaskDelay(pdMS_TO_TICKS(900)); // Aguarda 900ms
+                vTaskDelay(pdMS_TO_TICKS(800)); // Aguarda 900ms
             }
             else if (current_state == 1){
                 // Um beep rápido intermitente
@@ -199,14 +198,13 @@ void vSwitchModeTask(){
     while (true){
         if (gpio_get(BUTTON_A) == 0){
             mode = !mode; // Alterna o modo
-            printf("Modo noturno: %s\n", mode ? "Ativado" : "Desativado");
         }
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
 
 
-void vDisplay3Task()
+void vDisplayTask()
 {
     // I2C Initialisation. Using it at 400Khz.
     i2c_init(I2C_PORT, 400 * 1000);
@@ -288,9 +286,9 @@ int main()
         NULL, tskIDLE_PRIORITY, NULL);
     xTaskCreate(vSwitchModeTask, "Botao Semaforo Task", configMINIMAL_STACK_SIZE,
         NULL, tskIDLE_PRIORITY, NULL);
-
-    xTaskCreate(vDisplay3Task, "Cont Task Disp3", configMINIMAL_STACK_SIZE, 
+    xTaskCreate(vDisplayTask, "Display Semaforo Task", configMINIMAL_STACK_SIZE, 
         NULL, tskIDLE_PRIORITY, NULL);
+
     vTaskStartScheduler();
     panic_unsupported();
 }
